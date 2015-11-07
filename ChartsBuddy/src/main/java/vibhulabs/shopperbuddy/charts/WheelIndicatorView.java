@@ -169,6 +169,8 @@ public class WheelIndicatorView extends View {
 
         itemEndPointsPaint = new Paint();
         itemEndPointsPaint.setAntiAlias(true);
+
+        attributesArray.recycle();
     }
 
     private void recalculateItemsAngles() {

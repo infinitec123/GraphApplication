@@ -9,6 +9,66 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/user_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="3dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Users in mall"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey1"
+                    android:textSize="22sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <vibhulabs.shopperbuddy.charts.CircleIndicatorView
+                        android:id="@+id/circle_indicator_view_men"
+                        android:layout_width="0dp"
+                        android:layout_height="180dp"
+                        android:layout_weight="1"
+                        app:circleImage="@drawable/drawable_men"
+                        app:text1="32,400"
+                        app:text1Color="#444444"
+                        app:text2="Users"
+                        app:text2Color="@color/grey3"
+                        app:weight="0.8" />
+
+                    <vibhulabs.shopperbuddy.charts.CircleIndicatorView
+                        android:id="@+id/circle_indicator_view_women"
+                        android:layout_width="0dp"
+                        android:layout_height="180dp"
+                        android:layout_weight="1"
+                        app:circleImage="@drawable/drawable_women"
+                        app:text1="36,680"
+                        app:text1Color="#444444"
+                        app:text2="Users"
+                        app:text2Color="@color/grey3"
+                        app:weight="1" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
         <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/customer_card"
@@ -31,6 +91,7 @@
                     android:gravity="center_horizontal"
                     android:text="Customers in mall"
                     android:textAllCaps="true"
+                    android:textColor="@color/grey1"
                     android:textSize="22sp" />
 
                 <vibhulabs.shopperbuddy.charts.WheelIndicatorView
@@ -53,6 +114,7 @@
                     android:gravity="center_horizontal"
                     android:text="Age group"
                     android:textAllCaps="true"
+                    android:textColor="@color/grey1"
                     android:textSize="18sp" />
 
                 <LinearLayout
@@ -145,12 +207,61 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
                     android:gravity="center_horizontal"
                     android:text="products in demand"
                     android:textAllCaps="true"
+                    android:textColor="@color/grey1"
                     android:textSize="22sp" />
+
+                <vibhulabs.shopperbuddy.charts.LineIndicatorView
+                    android:id="@+id/line_indicator_view_0"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/default_line_indicator_size"
+                    app:category1Color="@color/color_women"
+                    app:category1Percentage="0.43"
+                    app:category1Text="43%"
+                    app:category2Color="@color/color_men"
+                    app:category2Text="57%"
+                    app:categoryImage="@drawable/icon_mobile"
+                    app:categoryText="Mobiles &amp; Tablets"
+                    app:categoryTotalText="3.1k"
+                    app:leftCircleColor="@color/grey1" />
+
+
+                <vibhulabs.shopperbuddy.charts.LineIndicatorView
+                    android:id="@+id/line_indicator_view_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/default_line_indicator_size"
+                    android:layout_marginTop="12dp"
+                    app:category1Color="@color/color_women"
+                    app:category1Percentage="0.45"
+                    app:category1Text="45%"
+                    app:category2Color="@color/color_men"
+                    app:category2Text="55%"
+                    app:categoryImage="@drawable/icon_men_fashion"
+                    app:categoryText="Men's Fashion"
+                    app:categoryTotalText="6.8k"
+                    app:leftCircleColor="@color/grey1" />
+
+                <vibhulabs.shopperbuddy.charts.LineIndicatorView
+                    android:id="@+id/line_indicator_view_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/default_line_indicator_size"
+                    android:layout_marginTop="12dp"
+                    app:category1Color="@color/color_women"
+                    app:category1Percentage="0.65"
+                    app:category1Text="65%"
+                    app:category2Color="@color/color_men"
+                    app:category2Text="35%"
+                    app:categoryImage="@drawable/icon_women_fashion"
+                    app:categoryText="Women's Fashion"
+                    app:categoryTotalText="12.8k"
+                    app:leftCircleColor="@color/grey1" />
+
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
+
     </LinearLayout>
 </ScrollView>

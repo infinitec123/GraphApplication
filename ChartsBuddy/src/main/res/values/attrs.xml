@@ -4,7 +4,7 @@
         <attr name="itemsLineWidth" format="dimension" />
         <attr name="circleWidth" format="dimension" />
         <attr name="filledPercent" format="integer" />
-        <attr name="centreImage" format="integer"/>
+        <attr name="centreImage" format="integer" />
         <attr name="backgroundColor" format="color" />
     </declare-styleable>
 
@@ -12,6 +12,29 @@
         <attr name="indicatorText" format="string" />
         <attr name="indicatorColor" format="color" />
         <attr name="indicatorTextColor" format="color" />
-        <attr name="indicatorImage" format="integer"/>
+        <attr name="indicatorImage" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="LineIndicatorView">
+        <attr name="categoryText" format="string" />
+        <attr name="categoryTotalText" format="string" />
+        <attr name="categoryImage" format="integer" />
+        <attr name="category1Percentage" format="float" />
+
+        <attr name="leftCircleColor" format="color" />
+        <attr name="category1Color" format="color" />
+        <attr name="category2Color" format="color" />
+        <attr name="category1Text" format="string" />
+        <attr name="category2Text" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="CircleIndicatorView">
+        <attr name="circleImage" format="integer" />
+
+        <attr name="text1Color" format="color" />
+        <attr name="text2Color" format="color" />
+        <attr name="weight" format="float" />
+        <attr name="text1" format="string" />
+        <attr name="text2" format="string" />
     </declare-styleable>
 </resources>

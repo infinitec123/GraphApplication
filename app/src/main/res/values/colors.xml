@@ -5,7 +5,6 @@
     <color name="colorAccent">#FF4081</color>
 
 
-
     <color name="color_toddler">#009D96</color>
     <color name="color_teen">#ADCF4A</color>
     <color name="color_youth">#1CBBB4</color>
@@ -15,4 +14,11 @@
     <color name="primary_text">#393838</color>
     <color name="secondary_text">#666666</color>
     <color name="tertiary_text">#727272</color>
+
+    <color name="color_men">#448CCB</color>
+    <color name="color_women">#EC008C</color>
+
+    <color name="grey1">#AAAAAA</color>
+    <color name="grey2">#c3c3c3</color>
+    <color name="grey3">#D3D3D3</color>
 </resources>

@@ -3,7 +3,6 @@ package vibhulabs.shopperbuddy.charts;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
@@ -18,11 +17,14 @@ import android.view.View;
  * <p>
  * Talk to me know what it does
  */
-public class IndicatorView extends View {
+public class CircleIndicatorView extends View {
 
-    private static final String TAG = "IndicatorView";
+    private static final String TAG = "CircleIndicatorView";
 
     private final static int DEFAULT_CENTRE_IMAGE_SIZE = 40;
+
+    private int mViewHeight;
+    private int mViewWidth;
 
     int mMinDistViewSize;
     int mMaxDistViewSize;
@@ -30,35 +32,37 @@ public class IndicatorView extends View {
     private int translationY;
     private RectF mWheelBoundsRectF;
 
-    private int mIndicatorColor = Color.argb(255, 220, 220, 220);
-    private Paint mCircleBackgroundPaint;
+    private Paint mText1Paint;
+    private String mText1;
+    private int mText1Color;
 
-    private Paint mIndicatorTextPaint;
-    private String mIndicatorText;
-    private int mTextIndicatorColor = Color.argb(255, 0, 0, 0);
+    private Paint mText2Paint;
+    private String mText2;
+    private int mText2Color;
 
 
     private int mCentreImageWidth = DEFAULT_CENTRE_IMAGE_SIZE;
+    private float mMultiplyFactor = 1f;
 
     @DrawableRes
-    private Drawable mIndicatorDrawable;
+    private Drawable mCentreDrawable;
 
     //*********************************************************************
     // Life cycles
     //*********************************************************************
 
 
-    public IndicatorView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CircleIndicatorView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(attrs);
     }
 
-    public IndicatorView(Context context, AttributeSet attrs) {
+    public CircleIndicatorView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(attrs);
     }
 
-    public IndicatorView(Context context) {
+    public CircleIndicatorView(Context context) {
         super(context);
         init(null);
     }
@@ -66,13 +70,13 @@ public class IndicatorView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        int viewHeight = getMeasuredHeight();
-        int viewWidth = getMeasuredWidth();
+        mViewHeight = getMeasuredHeight();
+        mViewWidth = getMeasuredWidth();
 
         mMinDistViewSize = Math.min(getMeasuredWidth(), getMeasuredHeight());
         mMaxDistViewSize = Math.max(getMeasuredWidth(), getMeasuredHeight());
 
-        if (viewWidth <= viewHeight) {
+        if (mViewWidth <= mViewHeight) {
             this.translationX = 0;
             this.translationY = (mMaxDistViewSize - mMinDistViewSize) / 2;
         } else {
@@ -87,22 +91,23 @@ public class IndicatorView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.translate(translationX, translationY);
-        float circleWidth = (float) (mWheelBoundsRectF.width() / 2.5);
-        int indicatorTextHeight = (int) (circleWidth / 5);
 
-        if (mCircleBackgroundPaint != null) {
-            canvas.drawCircle(mWheelBoundsRectF.centerX(), mWheelBoundsRectF.centerY() - indicatorTextHeight, circleWidth, mCircleBackgroundPaint);
-        }
+        int delta = 40;
+
+        float mCentreImageWidth = (mWheelBoundsRectF.width() / 3) * mMultiplyFactor;
 
         /* Draw centre image */
-        mCentreImageWidth = (int) (circleWidth / 2.5);
-        drawImage(mCentreImageWidth, mIndicatorDrawable, mWheelBoundsRectF.centerX(), mWheelBoundsRectF.centerY() - indicatorTextHeight, canvas);
+        drawImage((int) mCentreImageWidth, mCentreDrawable, mWheelBoundsRectF.centerX(), mWheelBoundsRectF.centerY() - delta, canvas);
 
-        /* Draw explanatory text */
-        int textXPosition = (int) ((mMinDistViewSize / 2) - (mIndicatorTextPaint.measureText(mIndicatorText) / 2));
-        float textYPosition = mMinDistViewSize;
-        //int yPos = (int) ((canvas.getHeight() / 2) - ((mIndicatorTextPaint.descent() + textPaint.ascent()) / 2)) ;
-        canvas.drawText(mIndicatorText, textXPosition, textYPosition, mIndicatorTextPaint);
+        /* Draw text2*/
+        float text2XPosition = (mWheelBoundsRectF.centerX() - (mText1Paint.measureText(mText2) / 2));
+        float text2YPosition = (float) (mViewHeight - 1.5*delta);
+        canvas.drawText(mText2, text2XPosition, text2YPosition, mText2Paint);
+
+        /* Draw text1*/
+        float textXPosition = (mWheelBoundsRectF.centerX() - (mText1Paint.measureText(mText1) / 2));
+        float textYPosition = (float) (mViewHeight - 1.5*delta - (mText2Paint.descent() - mText2Paint.ascent()));
+        canvas.drawText(mText1, textXPosition, textYPosition, mText1Paint);
     }
 
     //*********************************************************************
@@ -111,38 +116,48 @@ public class IndicatorView extends View {
 
     private void init(AttributeSet attrs) {
         TypedArray attributesArray = getContext().getTheme()
-                .obtainStyledAttributes(attrs, R.styleable.IndicatorView, 0, 0);
+                .obtainStyledAttributes(attrs, R.styleable.CircleIndicatorView, 0, 0);
 
-        CharSequence indicatorText = attributesArray.getString(R.styleable.IndicatorView_indicatorText);
-        if (indicatorText != null) {
-            mIndicatorText = indicatorText.toString();
-        }
-
-        Drawable drawable = attributesArray.getDrawable(R.styleable.IndicatorView_indicatorImage);
+        Drawable drawable = attributesArray.getDrawable(R.styleable.CircleIndicatorView_circleImage);
         if (drawable != null) {
-            mIndicatorDrawable = drawable;
+            mCentreDrawable = drawable;
         }
 
-        int indicatorColor = attributesArray.getColor(R.styleable.IndicatorView_indicatorColor, -1);
-        if (indicatorColor != -1) {
-            mIndicatorColor = indicatorColor;
+        CharSequence text1 = attributesArray.getString(R.styleable.CircleIndicatorView_text1);
+        if (text1 != null) {
+            mText1 = text1.toString();
         }
 
-        int textIndicatorColor = attributesArray.getColor(R.styleable.IndicatorView_indicatorTextColor, -1);
-        if (textIndicatorColor != -1) {
-            mTextIndicatorColor = textIndicatorColor;
+        CharSequence text2 = attributesArray.getString(R.styleable.CircleIndicatorView_text2);
+        if (text2 != null) {
+            mText2 = text2.toString();
         }
 
-        mCircleBackgroundPaint = new Paint();
-        mCircleBackgroundPaint.setColor(mIndicatorColor);
-        mCircleBackgroundPaint.setStyle(Paint.Style.FILL);
-        mCircleBackgroundPaint.setAntiAlias(true);
+        int text1Color = attributesArray.getColor(R.styleable.CircleIndicatorView_text1Color, -1);
+        if (text1Color != -1) {
+            mText1Color = text1Color;
+        }
 
-        mIndicatorTextPaint = new Paint();
-        mIndicatorTextPaint.setColor(mTextIndicatorColor);
-        mIndicatorTextPaint.setAntiAlias(true);
-        mIndicatorTextPaint.setTextSize(36);
-        mIndicatorTextPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        int text2Color = attributesArray.getColor(R.styleable.CircleIndicatorView_text2Color, -1);
+        if (text2Color != -1) {
+            mText2Color = text2Color;
+        }
+
+        mMultiplyFactor = attributesArray.getFloat(R.styleable.CircleIndicatorView_weight, 1.0f);
+        if (mMultiplyFactor > 1) {
+            throw new RuntimeException("Weight cannot be more than 1");
+        }
+
+        mText1Paint = new Paint();
+        mText1Paint.setColor(mText1Color);
+        mText1Paint.setAntiAlias(true);
+        mText1Paint.setTextSize(50);
+        mText1Paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+
+        mText2Paint = new Paint();
+        mText2Paint.setColor(mText1Color);
+        mText2Paint.setAntiAlias(true);
+        mText2Paint.setTextSize(46);
 
         attributesArray.recycle();
     }
@@ -169,24 +184,6 @@ public class IndicatorView extends View {
     //*********************************************************************
     // APIs
     //*********************************************************************
-
-    public void setIndicatorColor(int color) {
-        mIndicatorColor = color;
-        mCircleBackgroundPaint = new Paint();
-        mCircleBackgroundPaint.setColor(mIndicatorColor);
-        mCircleBackgroundPaint.setStyle(Paint.Style.FILL);
-        mCircleBackgroundPaint.setAntiAlias(true);
-        invalidate();
-    }
-
-    public void setIndicatorText(String s) {
-        mIndicatorText = s;
-        invalidate();
-    }
-
-    public void notifyDataSetChanged() {
-        invalidate();
-    }
 
 
     //*********************************************************************
