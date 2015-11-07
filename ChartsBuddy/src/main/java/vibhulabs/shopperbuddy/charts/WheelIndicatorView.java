@@ -10,8 +10,10 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.DrawableRes;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 
@@ -19,19 +21,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Displays a graphic in style with Google Fit Application.
- *
- * @author David Lázaro.
- * @attr ref android.R.styleable#mItemsLineWidth the width of the wheel indicator lines
- * @attr ref android.R.styleable#backgroundColor color for the inner circle
- * @attr ref android.R.styleable#mFilledPercent percent of circle filled by WheelItems values
+ * @author Sharath Pandeshwar
+ * @since 01/11/2015
+ * <p>
+ * Talk to me know what it does
  */
 public class WheelIndicatorView extends View {
+
+    private static final String TAG = "WheelIndicatorView";
 
     private final static int ANGLE_INIT_OFFSET = -90;
     private final static int DEFAULT_FILLED_PERCENT = 100;
     private final static int DEFAULT_ITEM_LINE_WIDTH = 25;
     private final static int DEFAULT_ITEM_CIRCLE_WIDTH = 55;
+
+    private final static int DEFAULT_CENTRE_IMAGE_SIZE = 120;
+    private final static int DEFAULT_INDICATOR_IMAGE_SIZE = 20;
+
+
     public static final int ANIMATION_DURATION = 2400;
     public static final int INNER_BACKGROUND_CIRCLE_COLOR = Color.argb(255, 220, 220, 220); // Color for
 
@@ -51,6 +58,16 @@ public class WheelIndicatorView extends View {
     private int mItemsLineWidth = 25;
     private int mCircleWidth = 55;
     private float mDelta = mCircleWidth - mItemsLineWidth;
+
+    /**
+     * TODO: Accept this from parameters
+     */
+    private int mCentreImageWidth = DEFAULT_CENTRE_IMAGE_SIZE;
+    private int mIndicatorImageWidth = DEFAULT_INDICATOR_IMAGE_SIZE;
+
+    @DrawableRes
+    private Drawable mCentreDrawable;
+
 
     //*********************************************************************
     // Life cycles
@@ -103,7 +120,7 @@ public class WheelIndicatorView extends View {
         canvas.drawArc(mWheelBoundsRectF, ANGLE_INIT_OFFSET, 360, false, innerBackgroundCirclePaint);
 
         /* Draw centre image */
-        drawCentreImage(canvas);
+        drawImage(mCentreImageWidth, mCentreDrawable, mWheelBoundsRectF.centerX(), mWheelBoundsRectF.centerY(), canvas);
 
         /* Draw Indicator Items */
         drawIndicatorItems(canvas);
@@ -129,6 +146,11 @@ public class WheelIndicatorView extends View {
         int bgColor = attributesArray.getColor(R.styleable.WheelIndicatorView_backgroundColor, -1);
         if (bgColor != -1) {
             setBackgroundColor(bgColor);
+        }
+
+        Drawable drawable = attributesArray.getDrawable(R.styleable.WheelIndicatorView_centreImage);
+        if (drawable != null) {
+            mCentreDrawable = drawable;
         }
 
         this.wheelIndicatorItems = new ArrayList<>();
@@ -171,22 +193,12 @@ public class WheelIndicatorView extends View {
             for (int i = wheelIndicatorItems.size() - 1; i >= 0; i--) { // Iterate backward to overlap larger items
                 draw(wheelIndicatorItems.get(i), mWheelBoundsRectF, wheelItemsAngles.get(i), canvas);
             }
+
+            /* Draw the last one again */
+            drawSingleIndicatorWithoutArc(wheelIndicatorItems.get(wheelIndicatorItems.size() - 1), wheelItemsAngles.get(wheelIndicatorItems.size() - 1), canvas);
         }
     }
 
-    private void drawCentreImage(Canvas canvas) {
-        Drawable centreDrawable = getDrawable(getContext(), R.drawable.drawable_men);
-        if (centreDrawable != null) {
-            int centreBound = 120;
-            int left = (int) (mWheelBoundsRectF.centerX() - centreBound);
-            int top = (int) (mWheelBoundsRectF.centerY() - centreBound);
-            int right = (int) (mWheelBoundsRectF.centerX() + centreBound);
-            int bottom = (int) (mWheelBoundsRectF.centerY() + centreBound);
-
-            centreDrawable.setBounds(left, top, right, bottom);
-            centreDrawable.draw(canvas);
-        }
-    }
 
     private void draw(WheelIndicatorItem indicatorItem, RectF surfaceRectF, float angle, Canvas canvas) {
         itemArcPaint.setColor(indicatorItem.getColor());
@@ -197,7 +209,53 @@ public class WheelIndicatorView extends View {
         // Draw top circle
         canvas.drawCircle(minDistViewSize / 2, mItemsLineWidth + mDelta, mItemsLineWidth + mDelta / 2, itemEndPointsPaint);
 
-        canvas.drawCircle((float) (mWheelBoundsRectF.centerX() + (mWheelBoundsRectF.width() / 2) * Math.cos(Math.toRadians(angle + ANGLE_INIT_OFFSET))), (float) (mWheelBoundsRectF.centerY() + (mWheelBoundsRectF.width() / 2) * Math.sin(Math.toRadians(angle + ANGLE_INIT_OFFSET))), mItemsLineWidth + mDelta, itemEndPointsPaint);
+        float xPoint = (float) (mWheelBoundsRectF.centerX() + (mWheelBoundsRectF.width() / 2) * Math.cos(Math.toRadians(angle + ANGLE_INIT_OFFSET)));
+        float yPoint = (float) (mWheelBoundsRectF.centerY() + (mWheelBoundsRectF.width() / 2) * Math.sin(Math.toRadians(angle + ANGLE_INIT_OFFSET)));
+
+        canvas.drawCircle(xPoint, yPoint, mItemsLineWidth + mDelta, itemEndPointsPaint);
+        drawImage(mIndicatorImageWidth, indicatorItem.getDrawableRes(), xPoint, yPoint, canvas);
+    }
+
+
+    private void drawSingleIndicatorWithoutArc(WheelIndicatorItem indicatorItem, float angle, Canvas canvas) {
+        itemArcPaint.setColor(indicatorItem.getColor());
+        itemEndPointsPaint.setColor(indicatorItem.getColor());
+
+        float xPoint = (float) (mWheelBoundsRectF.centerX() + (mWheelBoundsRectF.width() / 2) * Math.cos(Math.toRadians(angle + ANGLE_INIT_OFFSET)));
+        float yPoint = (float) (mWheelBoundsRectF.centerY() + (mWheelBoundsRectF.width() / 2) * Math.sin(Math.toRadians(angle + ANGLE_INIT_OFFSET)));
+        canvas.drawCircle(xPoint, yPoint, mItemsLineWidth + mDelta, itemEndPointsPaint);
+        drawImage(mIndicatorImageWidth, indicatorItem.getDrawableRes(), xPoint, yPoint, canvas);
+    }
+
+    /**
+     * @param centreBound Size of the image that will be drawn
+     * @param resId       Drawable resource id of the resource which should be drawn
+     * @param x           X centre of image where it should be drawn.
+     * @param y           Y centre of image where it should be drawn.
+     * @param canvas
+     */
+    private void drawImage(int centreBound, @DrawableRes int resId, float x, float y, Canvas canvas) {
+        Drawable centreDrawable = getDrawable(getContext(), resId);
+        drawImage(centreBound, centreDrawable, x, y, canvas);
+    }
+
+    /**
+     * @param centreBound    Size of the image that will be drawn
+     * @param centreDrawable Drawable resource of the resource which should be drawn
+     * @param x              X centre of image where it should be drawn.
+     * @param y              Y centre of image where it should be drawn.
+     * @param canvas
+     */
+    private void drawImage(int centreBound, Drawable centreDrawable, float x, float y, Canvas canvas) {
+        if (centreDrawable != null) {
+            int left = (int) (x - centreBound);
+            int top = (int) (y - centreBound);
+            int right = (int) (x + centreBound);
+            int bottom = (int) (y + centreBound);
+
+            centreDrawable.setBounds(left, top, right, bottom);
+            centreDrawable.draw(canvas);
+        }
     }
 
     private Drawable getDrawable(final Context context, int id) {

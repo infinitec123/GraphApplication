@@ -3,4 +3,16 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+
+
+    <color name="color_toddler">#009D96</color>
+    <color name="color_teen">#ADCF4A</color>
+    <color name="color_youth">#1CBBB4</color>
+    <color name="color_mid_life">#005D55</color>
+    <color name="color_seniors">#3CB878</color>
+
+    <color name="primary_text">#393838</color>
+    <color name="secondary_text">#666666</color>
+    <color name="tertiary_text">#727272</color>
 </resources>

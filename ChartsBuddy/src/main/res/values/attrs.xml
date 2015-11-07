@@ -4,6 +4,14 @@
         <attr name="itemsLineWidth" format="dimension" />
         <attr name="circleWidth" format="dimension" />
         <attr name="filledPercent" format="integer" />
+        <attr name="centreImage" format="integer"/>
         <attr name="backgroundColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="IndicatorView">
+        <attr name="indicatorText" format="string" />
+        <attr name="indicatorColor" format="color" />
+        <attr name="indicatorTextColor" format="color" />
+        <attr name="indicatorImage" format="integer"/>
     </declare-styleable>
 </resources>
