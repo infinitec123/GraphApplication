@@ -13,7 +13,6 @@ import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 
@@ -23,7 +22,7 @@ import java.util.List;
 /**
  * @author Sharath Pandeshwar
  * @since 01/11/2015
- * <p>
+ * <p/>
  * Talk to me know what it does
  */
 public class WheelIndicatorView extends View {
@@ -45,7 +44,7 @@ public class WheelIndicatorView extends View {
     private Paint itemArcPaint;
     private Paint itemEndPointsPaint;
     private Paint innerBackgroundCirclePaint;
-    private List<WheelIndicatorItem> wheelIndicatorItems;
+    private List<WheelIndicatorItem> mWheelIndicatorItems;
     private int minDistViewSize;
     private int maxDistViewSize;
     private int traslationX;
@@ -153,7 +152,7 @@ public class WheelIndicatorView extends View {
             mCentreDrawable = drawable;
         }
 
-        this.wheelIndicatorItems = new ArrayList<>();
+        this.mWheelIndicatorItems = new ArrayList<>();
         this.wheelItemsAngles = new ArrayList<>();
 
         itemArcPaint = new Paint();
@@ -178,11 +177,11 @@ public class WheelIndicatorView extends View {
         float total = 0;
         float angleAccumulated = 0;
 
-        for (WheelIndicatorItem item : wheelIndicatorItems) {
+        for (WheelIndicatorItem item : mWheelIndicatorItems) {
             total += item.getWeight();
         }
-        for (int i = 0; i < wheelIndicatorItems.size(); ++i) {
-            float normalizedValue = wheelIndicatorItems.get(i).getWeight() / total;
+        for (int i = 0; i < mWheelIndicatorItems.size(); ++i) {
+            float normalizedValue = mWheelIndicatorItems.get(i).getWeight() / total;
             float angle = 360 * normalizedValue * mFilledPercent / 100;
             wheelItemsAngles.add(angle + angleAccumulated);
             angleAccumulated += angle;
@@ -191,13 +190,13 @@ public class WheelIndicatorView extends View {
 
 
     private void drawIndicatorItems(Canvas canvas) {
-        if (wheelIndicatorItems.size() > 0) {
-            for (int i = wheelIndicatorItems.size() - 1; i >= 0; i--) { // Iterate backward to overlap larger items
-                draw(wheelIndicatorItems.get(i), mWheelBoundsRectF, wheelItemsAngles.get(i), canvas);
+        if (mWheelIndicatorItems.size() > 0) {
+            for (int i = mWheelIndicatorItems.size() - 1; i >= 0; i--) { // Iterate backward to overlap larger items
+                draw(mWheelIndicatorItems.get(i), mWheelBoundsRectF, wheelItemsAngles.get(i), canvas);
             }
 
             /* Draw the last one again */
-            drawSingleIndicatorWithoutArc(wheelIndicatorItems.get(wheelIndicatorItems.size() - 1), wheelItemsAngles.get(wheelIndicatorItems.size() - 1), canvas);
+            drawSingleIndicatorWithoutArc(mWheelIndicatorItems.get(mWheelIndicatorItems.size() - 1), wheelItemsAngles.get(mWheelIndicatorItems.size() - 1), canvas);
         }
     }
 
@@ -274,10 +273,14 @@ public class WheelIndicatorView extends View {
 
     public void setWheelIndicatorItems(List<WheelIndicatorItem> wheelIndicatorItems) {
         if (wheelIndicatorItems == null)
-            throw new IllegalArgumentException("wheelIndicatorItems cannot be null");
-        this.wheelIndicatorItems = wheelIndicatorItems;
+            throw new IllegalArgumentException("mWheelIndicatorItems cannot be null");
+        this.mWheelIndicatorItems = wheelIndicatorItems;
         recalculateItemsAngles();
         invalidate();
+    }
+
+    public void clearIndicators() {
+        this.mWheelIndicatorItems.clear();
     }
 
     public void setFilledPercent(int mFilledPercent) {
@@ -313,10 +316,20 @@ public class WheelIndicatorView extends View {
     }
 
     public void addWheelIndicatorItem(WheelIndicatorItem indicatorItem) {
-        if (indicatorItem == null)
-            throw new IllegalArgumentException("wheelIndicatorItems cannot be null");
+        if (indicatorItem == null) {
+            throw new IllegalArgumentException("mWheelIndicatorItems cannot be null");
+        }
+        this.mWheelIndicatorItems.add(indicatorItem);
+        recalculateItemsAngles();
+        invalidate();
+    }
 
-        this.wheelIndicatorItems.add(indicatorItem);
+    public void addWheelIndicatorItems(ArrayList<WheelIndicatorItem> indicatorItems) {
+        if (indicatorItems == null) {
+            throw new IllegalArgumentException("mWheelIndicatorItems cannot be null");
+        }
+
+        this.mWheelIndicatorItems.addAll(indicatorItems);
         recalculateItemsAngles();
         invalidate();
     }

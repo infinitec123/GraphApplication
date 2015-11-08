@@ -15,7 +15,7 @@ import android.view.View;
 /**
  * @author Sharath Pandeshwar
  * @since 07/11/2015
- * <p>
+ * <p/>
  * Talk to me to know what it does
  */
 public class LineIndicatorView extends View {
@@ -109,17 +109,20 @@ public class LineIndicatorView extends View {
         float topLeftYPos = circleRadius - (rectangularBlockHeight / 2);
         float bottomRightXPos = mMaxDistViewSize - mTextBlockWidth;
         float bottomRightYPos = circleRadius + (rectangularBlockHeight / 2);
+        float blockWidth = bottomRightXPos - topLeftXPos;
+        float block1Width = blockWidth * mCategory1Percentage;
+        float block1XEndPos = topLeftXPos + block1Width;
 
         /* Draw left (category-1) block */
-        canvas.drawRect(topLeftXPos, topLeftYPos, bottomRightXPos * mCategory1Percentage, bottomRightYPos, mCategory1Paint);
+        canvas.drawRect(topLeftXPos, topLeftYPos, block1XEndPos, bottomRightYPos, mCategory1Paint);
 
         /* Draw left (category-1) text */
-        int text1XPosition = (int) ((bottomRightXPos * mCategory1Percentage) - 3 * mCategory1Paint.measureText(mCategory1Text));
+        int text1XPosition = (int) (block1XEndPos - 3 * mCategory1Paint.measureText(mCategory1Text));
         float text1YPosition = (float) (bottomRightYPos - 1.5 * ((mCategory1TextPaint.descent() + mCategory1TextPaint.ascent())));
         canvas.drawText(mCategory1Text, text1XPosition, text1YPosition, mCategory1TextPaint);
 
         /* Draw right (category-2) block */
-        canvas.drawRect(bottomRightXPos * mCategory1Percentage, topLeftYPos, bottomRightXPos, bottomRightYPos, mCategory2Paint);
+        canvas.drawRect(block1XEndPos, topLeftYPos, bottomRightXPos, bottomRightYPos, mCategory2Paint);
 
         /* Draw right (category-2) text */
         int text2XPosition = (int) (bottomRightXPos - 3 * mCategory2Paint.measureText(mCategory2Text));
@@ -249,6 +252,15 @@ public class LineIndicatorView extends View {
     //*********************************************************************
     // APIs
     //*********************************************************************
+
+    public void refreshData(String category1Text, String category2Text, String total, float category1Percentage) {
+        mCategoryTotalText = total;
+        mCategory1Text = category1Text;
+        mCategory2Text = category2Text;
+        mCategory1Percentage = category1Percentage;
+
+        invalidate();
+    }
 
 
     //*********************************************************************
