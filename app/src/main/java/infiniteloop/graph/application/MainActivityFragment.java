@@ -51,7 +51,7 @@ public class MainActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, v);
-        
+
         mHandler = new Handler();
         return v;
     }
