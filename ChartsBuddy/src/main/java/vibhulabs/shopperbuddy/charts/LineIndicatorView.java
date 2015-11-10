@@ -90,7 +90,6 @@ public class LineIndicatorView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-
         /**
          * TODO: Solve this cropping issue
          */
@@ -149,8 +148,7 @@ public class LineIndicatorView extends View {
     //*********************************************************************
 
     private void init(AttributeSet attrs) {
-        TypedArray attributesArray = getContext().getTheme()
-                .obtainStyledAttributes(attrs, R.styleable.LineIndicatorView, 0, 0);
+        TypedArray attributesArray = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.LineIndicatorView, 0, 0);
 
         Drawable drawable = attributesArray.getDrawable(R.styleable.LineIndicatorView_categoryImage);
         if (drawable != null) {

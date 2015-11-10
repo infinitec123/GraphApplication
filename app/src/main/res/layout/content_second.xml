@@ -31,7 +31,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="Timing"
+                    android:text="Time when offer was redeemed"
                     android:textAllCaps="true"
                     android:textColor="@color/grey1"
                     android:textSize="22sp" />
@@ -45,6 +45,78 @@
 
             </LinearLayout>
 
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/gender_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="3dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Gender of customers"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey1"
+                    android:textSize="22sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:orientation="horizontal">
+
+                    <vibhulabs.shopperbuddy.charts.SimpleWheelIndicatorView
+                        android:id="@+id/simple_wheel_indicator_view_1"
+                        android:layout_width="0dp"
+                        android:layout_height="200dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginRight="12dp"
+                        android:layout_weight="1"
+                        app:sw_backgroundColor="#FFFFFF"
+                        app:sw_bottomTextColor="@color/grey4"
+                        app:sw_centreColor="@color/color_target"
+                        app:sw_centreImage="@drawable/ic_target"
+                        app:sw_centreText="Targeted"
+                        app:sw_centreTextColor="@color/inverse_text"
+                        app:sw_filledPercent="100"
+                        app:sw_itemsLineWidth="4dp"
+                        app:sw_text1="Males : 2500"
+                        app:sw_text2="Females : 2500" />
+
+                    <vibhulabs.shopperbuddy.charts.SimpleWheelIndicatorView
+                        android:id="@+id/simple_wheel_indicator_view_2"
+                        android:layout_width="0dp"
+                        android:layout_height="200dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="12dp"
+                        android:layout_weight="1"
+                        app:sw_backgroundColor="#FFFFFF"
+                        app:sw_bottomTextColor="@color/grey4"
+                        app:sw_centreColor="@color/color_viewed"
+                        app:sw_centreImage="@drawable/ic_viewed"
+                        app:sw_centreText="Viewed"
+                        app:sw_centreTextColor="@color/inverse_text"
+                        app:sw_filledPercent="100"
+                        app:sw_itemsLineWidth="4dp"
+                        app:sw_text1="Males : 1000"
+                        app:sw_text2="Females : 1345" />
+                </LinearLayout>
+            </LinearLayout>
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"

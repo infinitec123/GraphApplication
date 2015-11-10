@@ -22,25 +22,26 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import java.util.ArrayList;
 
 /**
- * Created by abhinav.chauhan on 09/11/15.
- *
+ * @author Abhinav Chauhan and Sharath Pandeshwar
+ * @since 09/11/15.
+ * <p>
  * Sample usage in xml
- *
- <com.spider.abhinavchauhan.charts.chart.FunnelChart
- android:id="@+id/my_chart"
- android:layout_width="250dp"
- android:layout_height="250dp"
- android:background="#10000000"
- app:required_height="250dp"
- app:required_width="250dp" />
- *
+ * <p>
+ * <vibhulabs.shopperbuddy.charts.FunnelChart
+ * android:id="@+id/id_my_chart"
+ * android:layout_width="250dp"
+ * android:layout_height="250dp"
+ * android:background="#10000000"
+ * app:required_height="250dp"
+ * app:required_width="250dp" />
  */
 public class FunnelChart extends View {
 
     private Paint mPaint;
-    private float mScreenDensity;
+    //private float mScreenDensity;
     private int mRequiredHeight;
     private int mRequiredWidth;
+
 
     private ArrayList<Circle> mCircles;
     private ArrayList<CircleTail> mCircleTails;
@@ -61,6 +62,7 @@ public class FunnelChart extends View {
 
     public FunnelChart(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setFilterBitmap(true);
@@ -69,7 +71,7 @@ public class FunnelChart extends View {
         mPaint.setStrokeWidth(2);
         mPaint.setStyle(Paint.Style.FILL);
 
-        mScreenDensity = getResources().getDisplayMetrics().density;
+        //mScreenDensity = getResources().getDisplayMetrics().density;
 
         TypedArray a = context.getTheme().obtainStyledAttributes(
                 attrs,
@@ -85,7 +87,7 @@ public class FunnelChart extends View {
     }
 
     // *********************************************************************************************
-    // * Method overrides
+    // Life cycles
     // *********************************************************************************************
 
     @Override
@@ -211,13 +213,12 @@ public class FunnelChart extends View {
     }
 
     // *********************************************************************************************
-    // * public methods
+    // APIs
     // *********************************************************************************************
 
     public void setLabel(String label, int index, boolean invalidate) {
         if (index < 0 || index >= mCircles.size()) {
-            throw new IllegalArgumentException("Index must be between 0 and "
-                    + (mCircles.size() - 1) + " inclusive");
+            throw new IllegalArgumentException("Index must be between 0 and " + (mCircles.size() - 1) + " inclusive");
         }
         mCircles.get(index).label = label;
         if (invalidate) {
@@ -242,19 +243,11 @@ public class FunnelChart extends View {
     }
 
     // *********************************************************************************************
-    // * utility methods
-    // *********************************************************************************************
-
-    public int dpToPx(int dp) {
-        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
-    }
-
-    // *********************************************************************************************
-    // * Private classes
+    // Private classes
     // *********************************************************************************************
 
     private class Circle {
-        private static final int ANIM_DURATION = 50;
+        private static final int ANIM_DURATION = 70;
         private float centerX;
         private float centerY;
         private float radius;
@@ -391,6 +384,10 @@ public class FunnelChart extends View {
         }
     }
 
+    // *********************************************************************************************
+    // Private classes
+    // *********************************************************************************************
+
     private class CircleTail {
         // https://www.desmos.com/calculator/cahqdxeshd
         private float[][] endPoints = {{-7.5f, 10}, {7.5f, 10}, {7.5f, -10}, {-7.5f, -10}};
@@ -437,7 +434,23 @@ public class FunnelChart extends View {
         }
     }
 
+    // *********************************************************************************************
+    // Utility methods
+    // *********************************************************************************************
+
+    public int dpToPx(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    // *********************************************************************************************
+    // Interface definitions
+    // *********************************************************************************************
+
     public interface OnCircleClickListener {
         void onCircleClick(int index);
     }
+
+    // *********************************************************************************************
+    // End of class
+    // *********************************************************************************************
 }

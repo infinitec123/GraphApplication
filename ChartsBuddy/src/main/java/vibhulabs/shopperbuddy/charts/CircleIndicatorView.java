@@ -80,7 +80,7 @@ public class CircleIndicatorView extends View {
             this.translationX = 0;
             this.translationY = (mMaxDistViewSize - mMinDistViewSize) / 2;
         } else {
-            this.translationX = 0;
+            this.translationY = 0;
             this.translationX = (mMaxDistViewSize - mMinDistViewSize) / 2;
         }
         // Adding artificial padding, depending on line width
