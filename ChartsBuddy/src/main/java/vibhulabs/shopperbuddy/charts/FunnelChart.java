@@ -160,10 +160,10 @@ public class FunnelChart extends View {
         });
         mCircles.add(circle);
         setCircleDimensions(mRequiredHeight, mRequiredWidth);
-        setLabel("123 Hello", 0, false);
-        setLabel("4354 Hello", 1, false);
-        setLabel("43666 Hello", 2, false);
-        setLabel("123666 Hello", 3, false);
+        setLabel("249 redeemed", 0, false);
+        setLabel("635 walk-ins", 1, false);
+        setLabel("2345 viewed", 2, false);
+        setLabel("5000 targeted", 3, false);
     }
 
     private void setCircleDimensions(int requiredHeight, int requiredWidth) {
