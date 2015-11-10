@@ -1,5 +1,7 @@
 package vibhulabs.shopperbuddy.charts;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
@@ -24,13 +26,13 @@ import java.util.ArrayList;
  *
  * Sample usage in xml
  *
-  <com.spider.abhinavchauhan.charts.chart.FunnelChart
-     android:id="@+id/my_chart"
-     android:layout_width="250dp"
-     android:layout_height="250dp"
-     android:background="#10000000"
-     app:required_height="250dp"
-     app:required_width="250dp" />
+ <com.spider.abhinavchauhan.charts.chart.FunnelChart
+ android:id="@+id/my_chart"
+ android:layout_width="250dp"
+ android:layout_height="250dp"
+ android:background="#10000000"
+ app:required_height="250dp"
+ app:required_width="250dp" />
  *
  */
 public class FunnelChart extends View {
@@ -263,7 +265,10 @@ public class FunnelChart extends View {
         private Bitmap icon;
         private float iconScale;
         private Matrix iconMatrix;
-        private RectF rectF;
+
+        private ValueAnimator expandAnimator;
+        private ValueAnimator collapseAnimator;
+        private boolean shouldCollapseNow = false;
 
         private OnClickListener onClickListener;
 
@@ -280,7 +285,42 @@ public class FunnelChart extends View {
             iconScale = currentRadius / 100;
             icon = BitmapFactory.decodeResource(getResources(), iconRes);
             iconMatrix = new Matrix();
-            rectF = new RectF();
+            initAnimators();
+        }
+
+        private void initAnimators() {
+            expandAnimator = ValueAnimator.ofFloat(currentRadius, radius * 1.2f);
+            expandAnimator.setDuration(ANIM_DURATION);
+            expandAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+            expandAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    currentRadius = (float) animation.getAnimatedValue();
+                    iconScale = currentRadius / 100;
+                    invalidate();
+                }
+            });
+            expandAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    if (shouldCollapseNow) {
+                        shouldCollapseNow = false;
+                        collapseAnimator.start();
+                    }
+                }
+            });
+
+            collapseAnimator = ValueAnimator.ofFloat(currentRadius, radius);
+            collapseAnimator.setDuration(ANIM_DURATION);
+            collapseAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+            collapseAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    currentRadius = (float) animation.getAnimatedValue();
+                    iconScale = currentRadius / 100;
+                    invalidate();
+                }
+            });
         }
 
         public void draw(Canvas canvas, Paint paint) {
@@ -337,33 +377,17 @@ public class FunnelChart extends View {
         }
 
         private void expand() {
-            ValueAnimator valueAnimator = ValueAnimator.ofFloat(currentRadius, radius * 1.2f);
-            valueAnimator.setDuration(ANIM_DURATION);
-            valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    currentRadius = (float) animation.getAnimatedValue();
-                    iconScale = currentRadius / 100;
-                    invalidate();
-                }
-            });
-            valueAnimator.start();
+            expandAnimator.end();
+            collapseAnimator.end();
+            expandAnimator.start();
         }
 
         private void collapse() {
-            ValueAnimator valueAnimator = ValueAnimator.ofFloat(currentRadius, radius);
-            valueAnimator.setDuration(ANIM_DURATION);
-            valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    currentRadius = (float) animation.getAnimatedValue();
-                    iconScale = currentRadius / 100;
-                    invalidate();
-                }
-            });
-            valueAnimator.start();
+            if (expandAnimator.isStarted()) {
+                shouldCollapseNow = true;
+            } else {
+                collapseAnimator.start();
+            }
         }
     }
 
