@@ -1,4 +1,4 @@
-package infiniteloop.graph.application.chart;
+package vibhulabs.shopperbuddy.charts;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -18,8 +18,6 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import java.util.ArrayList;
-
-import infiniteloop.graph.application.R;
 
 /**
  * Created by abhinav.chauhan on 09/11/15.
