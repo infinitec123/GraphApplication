@@ -24,6 +24,13 @@ import java.util.ArrayList;
  *
  * Sample usage in xml
  *
+  <com.spider.abhinavchauhan.charts.chart.FunnelChart
+     android:id="@+id/my_chart"
+     android:layout_width="250dp"
+     android:layout_height="250dp"
+     android:background="#10000000"
+     app:required_height="250dp"
+     app:required_width="250dp" />
  *
  */
 public class FunnelChart extends View {
