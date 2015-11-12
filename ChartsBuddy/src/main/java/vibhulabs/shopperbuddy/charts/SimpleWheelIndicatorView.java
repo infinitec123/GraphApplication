@@ -1,6 +1,7 @@
 package vibhulabs.shopperbuddy.charts;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -18,7 +19,7 @@ import java.util.List;
 /**
  * @author Sharath Pandeshwar
  * @since 10/11/2015
- * <p>
+ * <p/>
  * Talk to me know what it does
  */
 public class SimpleWheelIndicatorView extends View {
@@ -34,8 +35,8 @@ public class SimpleWheelIndicatorView extends View {
     private List<WheelIndicatorItem> mWheelIndicatorItems;
     private int mViewHeight;
     private int mViewWidth;
-    private int traslationX;
-    private int traslationY;
+    private int mTranslationX;
+    private int mTranslationY;
     private RectF mWheelBoundsRectF;
     private ArrayList<Float> wheelItemsAngles;     // calculated angle for each @WheelIndicatorItem
     private int mFilledPercent = 100; // Default is filled full always
@@ -82,8 +83,19 @@ public class SimpleWheelIndicatorView extends View {
         mViewHeight = getMeasuredHeight();
         mViewWidth = getMeasuredWidth();
 
+        int availableHeight = (int) (0.7 * mViewHeight); //Only top 70% of height will be given to image
+        int mMinDistViewSize = Math.min(mViewWidth, availableHeight);
+        int mMaxDistViewSize = Math.max(mViewWidth, availableHeight);
+        mWheelBoundsRectF = new RectF(mItemsLineWidth, mItemsLineWidth, mMinDistViewSize - mItemsLineWidth, mMinDistViewSize - mItemsLineWidth);
+        if (mViewWidth <= availableHeight) {
+            this.mTranslationX = 0;
+            this.mTranslationY = (mMaxDistViewSize - mMinDistViewSize) / 2;
+        } else {
+            this.mTranslationY = 0;
+            this.mTranslationX = (mMaxDistViewSize - mMinDistViewSize) / 2;
+        }
 
-        int minDistViewSize = Math.min(getMeasuredWidth(), getMeasuredHeight());
+        /*int minDistViewSize = Math.min(getMeasuredWidth(), getMeasuredHeight());
         int maxDistViewSize = Math.max(getMeasuredWidth(), getMeasuredHeight());
 
         if (mViewWidth <= mViewHeight) {
@@ -94,16 +106,18 @@ public class SimpleWheelIndicatorView extends View {
             this.traslationX = (maxDistViewSize - minDistViewSize) / 2;
         }
         // Adding artificial padding, depending on line width
-        mWheelBoundsRectF = new RectF(mItemsLineWidth, mItemsLineWidth, minDistViewSize - mItemsLineWidth, minDistViewSize - mItemsLineWidth);
+        mWheelBoundsRectF = new RectF(mItemsLineWidth, mItemsLineWidth, minDistViewSize - mItemsLineWidth, minDistViewSize - mItemsLineWidth);*/
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.translate(traslationX, 0);
+        //canvas.translate(traslationX, 0);
+        canvas.translate(this.mTranslationX, this.mTranslationY);
+        //canvas.drawRect(mWheelBoundsRectF, mBottomTextPaint);
 
         /* Draw centre circle */
-        float centreCircleWidth = (float) (mWheelBoundsRectF.width() / 3.5);
+        float centreCircleWidth = (float) (mWheelBoundsRectF.height() / 3.5);
         canvas.drawCircle(mWheelBoundsRectF.centerX(), mWheelBoundsRectF.centerY(), centreCircleWidth, mCentreCirclePaint);
 
         /* Draw centre text */
@@ -115,16 +129,17 @@ public class SimpleWheelIndicatorView extends View {
         /* Draw centre icon */
         drawImage((int) (centreCircleWidth / 3.5), mCentreIconDrawable, mWheelBoundsRectF.centerX(), (float) (mWheelBoundsRectF.centerY() - 1.5 * delta), canvas);
 
-        /* Draw bottom texts*/
-        int textDelta = 20;
-        float text2XPosition = (mWheelBoundsRectF.centerX() - (mBottomTextPaint.measureText(mText2) / 2));
-        float text2YPosition = (float) (mViewHeight - 1.5*textDelta);
-        canvas.drawText(mText2, text2XPosition, text2YPosition, mBottomTextPaint);
-
-        /* Draw text1*/
+        /* Draw bottom text1*/
+        int textPadding = dpToPx(4);
         float textXPosition = (mWheelBoundsRectF.centerX() - (mBottomTextPaint.measureText(mText1) / 2));
-        float textYPosition = (float) (mViewHeight - 1.5*textDelta - (mBottomTextPaint.descent() - mBottomTextPaint.ascent()));
-        canvas.drawText(mText1, textXPosition, textYPosition, mBottomTextPaint);
+        //float textYPosition = (float) (mViewHeight - 1.5*textDelta - (mBottomTextPaint.descent() - mBottomTextPaint.ascent()));
+        float text1YPosition = mWheelBoundsRectF.centerY() + mWheelBoundsRectF.height() / 2 + textPadding + mItemsLineWidth + (mBottomTextPaint.descent() - mBottomTextPaint.ascent());
+        canvas.drawText(mText1, textXPosition, text1YPosition, mBottomTextPaint);
+
+        /* Draw bottom text2*/
+        float text2XPosition = (mWheelBoundsRectF.centerX() - (mBottomTextPaint.measureText(mText2) / 2));
+        float text2YPosition = text1YPosition + (mBottomTextPaint.descent() - mBottomTextPaint.ascent());
+        canvas.drawText(mText2, text2XPosition, text2YPosition, mBottomTextPaint);
 
         /* Draw Indicator Items */
         drawIndicatorItems(canvas);
@@ -327,6 +342,15 @@ public class SimpleWheelIndicatorView extends View {
     public void notifyDataSetChanged() {
         recalculateItemsAngles();
         invalidate();
+    }
+
+
+    // *********************************************************************************************
+    // Utility methods
+    // *********************************************************************************************
+
+    public int dpToPx(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
 
 

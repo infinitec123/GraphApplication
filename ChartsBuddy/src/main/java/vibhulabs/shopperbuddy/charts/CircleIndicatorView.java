@@ -1,6 +1,7 @@
 package vibhulabs.shopperbuddy.charts;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -14,7 +15,7 @@ import android.view.View;
 /**
  * @author Sharath Pandeshwar
  * @since 07/11/2015
- * <p>
+ * <p/>
  * Talk to me know what it does
  */
 public class CircleIndicatorView extends View {
@@ -73,7 +74,20 @@ public class CircleIndicatorView extends View {
         mViewHeight = getMeasuredHeight();
         mViewWidth = getMeasuredWidth();
 
-        mMinDistViewSize = Math.min(getMeasuredWidth(), getMeasuredHeight());
+        int availableHeight = (int) (0.7 * mViewHeight); //Only top 70% of height will be given to image
+        mMinDistViewSize = Math.min(mViewWidth, availableHeight);
+        mMaxDistViewSize = Math.max(mViewWidth, availableHeight);
+        mWheelBoundsRectF = new RectF(0, 0, mMinDistViewSize, mMinDistViewSize);
+        if (mViewWidth <= availableHeight) {
+            this.translationX = 0;
+            this.translationY = (mMaxDistViewSize - mMinDistViewSize) / 2;
+        } else {
+            this.translationY = 0;
+            this.translationX = (mMaxDistViewSize - mMinDistViewSize) / 2;
+        }
+
+
+        /*mMinDistViewSize = Math.min(getMeasuredWidth(), getMeasuredHeight());
         mMaxDistViewSize = Math.max(getMeasuredWidth(), getMeasuredHeight());
 
         if (mViewWidth <= mViewHeight) {
@@ -84,30 +98,30 @@ public class CircleIndicatorView extends View {
             this.translationX = (mMaxDistViewSize - mMinDistViewSize) / 2;
         }
         // Adding artificial padding, depending on line width
-        mWheelBoundsRectF = new RectF(0, 0, mMinDistViewSize, mMinDistViewSize);
+        mWheelBoundsRectF = new RectF(0, 0, mMinDistViewSize, mMinDistViewSize);*/
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.translate(translationX, translationY);
+        //canvas.drawRect(mWheelBoundsRectF, mText2Paint);
 
-        int delta = 40;
+        float mCentreImageWidth = (float) ((mWheelBoundsRectF.width() / 2.5) * mMultiplyFactor);
 
-        float mCentreImageWidth = (mWheelBoundsRectF.width() / 3) * mMultiplyFactor;
+        // Draw centre image
+        drawImage((int) mCentreImageWidth, mCentreDrawable, mWheelBoundsRectF.centerX(), mWheelBoundsRectF.centerY(), canvas);
 
-        /* Draw centre image */
-        drawImage((int) mCentreImageWidth, mCentreDrawable, mWheelBoundsRectF.centerX(), mWheelBoundsRectF.centerY() - delta, canvas);
+        // Draw text1
+        int textPadding = dpToPx(0); // No need of padding because centre image anyway is smaller than mWheelBoundsRectF
+        float text1XPosition = (mWheelBoundsRectF.centerX() - (mText1Paint.measureText(mText1) / 2));
+        float text1YPosition = mWheelBoundsRectF.centerY() + mWheelBoundsRectF.height() / 2 + textPadding + (mText1Paint.descent() - mText1Paint.ascent());
+        canvas.drawText(mText1, text1XPosition, text1YPosition, mText1Paint);
 
-        /* Draw text2*/
+        // Draw text2
         float text2XPosition = (mWheelBoundsRectF.centerX() - (mText1Paint.measureText(mText2) / 2));
-        float text2YPosition = (float) (mViewHeight - 1.5*delta);
+        float text2YPosition = text1YPosition + (mText2Paint.descent() - mText2Paint.ascent());
         canvas.drawText(mText2, text2XPosition, text2YPosition, mText2Paint);
-
-        /* Draw text1*/
-        float textXPosition = (mWheelBoundsRectF.centerX() - (mText1Paint.measureText(mText1) / 2));
-        float textYPosition = (float) (mViewHeight - 1.5*delta - (mText2Paint.descent() - mText2Paint.ascent()));
-        canvas.drawText(mText1, textXPosition, textYPosition, mText1Paint);
     }
 
     //*********************************************************************
@@ -151,13 +165,13 @@ public class CircleIndicatorView extends View {
         mText1Paint = new Paint();
         mText1Paint.setColor(mText1Color);
         mText1Paint.setAntiAlias(true);
-        mText1Paint.setTextSize(50);
+        mText1Paint.setTextSize(dpToPx(18));
         mText1Paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
 
         mText2Paint = new Paint();
         mText2Paint.setColor(mText1Color);
         mText2Paint.setAntiAlias(true);
-        mText2Paint.setTextSize(46);
+        mText2Paint.setTextSize(dpToPx(16));
 
         attributesArray.recycle();
     }
@@ -180,6 +194,15 @@ public class CircleIndicatorView extends View {
             centreDrawable.draw(canvas);
         }
     }
+
+    // *********************************************************************************************
+    // Utility methods
+    // *********************************************************************************************
+
+    public int dpToPx(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+    }
+
 
     //*********************************************************************
     // APIs

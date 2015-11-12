@@ -83,7 +83,7 @@
                     <vibhulabs.shopperbuddy.charts.SimpleWheelIndicatorView
                         android:id="@+id/simple_wheel_indicator_view_1"
                         android:layout_width="0dp"
-                        android:layout_height="200dp"
+                        android:layout_height="210dp"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginRight="12dp"
                         android:layout_weight="1"
@@ -101,7 +101,7 @@
                     <vibhulabs.shopperbuddy.charts.SimpleWheelIndicatorView
                         android:id="@+id/simple_wheel_indicator_view_2"
                         android:layout_width="0dp"
-                        android:layout_height="200dp"
+                        android:layout_height="210dp"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginLeft="12dp"
                         android:layout_weight="1"

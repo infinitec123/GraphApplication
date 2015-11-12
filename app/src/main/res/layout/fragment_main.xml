@@ -43,7 +43,7 @@
                     <vibhulabs.shopperbuddy.charts.CircleIndicatorView
                         android:id="@+id/circle_indicator_view_men"
                         android:layout_width="0dp"
-                        android:layout_height="180dp"
+                        android:layout_height="200dp"
                         android:layout_weight="1"
                         app:circleImage="@drawable/drawable_men"
                         app:text1="32,400"
@@ -55,7 +55,7 @@
                     <vibhulabs.shopperbuddy.charts.CircleIndicatorView
                         android:id="@+id/circle_indicator_view_women"
                         android:layout_width="0dp"
-                        android:layout_height="180dp"
+                        android:layout_height="200dp"
                         android:layout_weight="1"
                         app:circleImage="@drawable/drawable_women"
                         app:text1="36,680"
